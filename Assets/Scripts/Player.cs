@@ -54,7 +54,7 @@ public class Player : MonoBehaviour
 
         for (int i = 0; i < 4; i++)
         {
-            char neigh_cell = levelManager.levelData[row + drow[i]][col + dcol[i]];
+            char neigh_cell = levelManager.levelData[row + drow[i], col + dcol[i]];
             if (neigh_cell == levelManager.cellTypeToCharMap[CellType.WALL])
             {
                 movementFreedom ^= 1 << i;
@@ -93,7 +93,7 @@ public class Player : MonoBehaviour
             current_row += drow[dir];
             current_col += dcol[dir];
 
-            if (levelManager.levelData[current_row][current_col] == levelManager.cellTypeToCharMap[CellType.WALL])
+            if (levelManager.levelData[current_row, current_col] == levelManager.cellTypeToCharMap[CellType.WALL])
             {
                 current_row -= drow[dir];
                 current_col -= dcol[dir];
@@ -105,8 +105,8 @@ public class Player : MonoBehaviour
         targetRow = current_row;
         targetCol = current_col;
 
-        targetPos.x = targetCol - levelManager.rows / 2 + .5f;
-        targetPos.z = -targetRow + levelManager.cols / 2 - .5f;
+        targetPos.x = targetCol - levelManager.rows / 2.0f + .5f;
+        targetPos.z = -targetRow + levelManager.cols / 2.0f - .5f;
         targetPos.y = transform.position.y;
     }
 
