@@ -22,7 +22,7 @@ public class Player : MonoBehaviour
 
     PlayerState currentState = PlayerState.IDLE;
     int movementFreedom = 0;
-    float speed = 10.0f;
+    float speed = 30.0f;
 
     public LevelManager levelManager { get; set; }
 
@@ -105,8 +105,8 @@ public class Player : MonoBehaviour
         targetRow = current_row;
         targetCol = current_col;
 
-        targetPos.x = targetCol - levelManager.rows / 2.0f + .5f;
-        targetPos.z = -targetRow + levelManager.cols / 2.0f - .5f;
+        targetPos.x = targetCol - levelManager.cols / 2.0f + .5f;
+        targetPos.z = -targetRow + levelManager.rows / 2.0f - .5f;
         targetPos.y = transform.position.y;
     }
 

@@ -19,7 +19,7 @@ public class LevelManager : MonoBehaviour
 {
     static int[] drow = new int[] { -1, 0, 1, 0 };
     static int[] dcol = new int[] { 0, 1, 0, -1 };
-    const int BLOCK_SIZE = 9;
+    const int BLOCK_SIZE = 27;
 
     [SerializeField]
     Transform playerPrefab;
@@ -63,7 +63,7 @@ public class LevelManager : MonoBehaviour
 
         // loadLevel(level_data);
 
-        var maze = generateMaze(4, 4);
+        var maze = generateMaze(6, 4);
         loadLevel(buildLevelFromMaze(maze)); 
     }
 
@@ -108,7 +108,7 @@ public class LevelManager : MonoBehaviour
 
                 if (obj == null) continue;
 
-                obj.position = new Vector3(col - rows / 2.0f + .5f, 0, -row + cols / 2.0f - .5f);
+                obj.position = new Vector3(col - cols / 2.0f + .5f, 0, -row + rows / 2.0f - .5f);
             }
         }
         Transform floor = Instantiate(floorPrefab);
@@ -117,28 +117,10 @@ public class LevelManager : MonoBehaviour
 
     int[,] generateMaze(int height, int width)
     {
-        int[,] freeCells = new int[height, width];
-        for (int row = 0; row < height; row++)
-        {
-            for (int col = 0; col < width; col++)
-                freeCells[row, col] = 1 | 1 << 1 | 1 << 2 | 1 << 3;
-        }
-        // for the edges, xor them to mark that it can not move there
-        for (int col = 0; col < width; col++)
-        {
-            freeCells[0, col] ^= 1;
-            freeCells[height - 1, col] ^= 1 << 2;
-        }
-        for (int row = 0; row < height; row++)
-        {
-            freeCells[row, 0] ^= 1 << 3;
-            freeCells[row, width-1] ^= 1 << 1;
-        }
-
         int[,] maze = new int[height, width];
         bool[,] used = new bool[height, width];
         used[0, 0] = true;
-        buildMaze(0, 0, maze, freeCells, used);
+        buildMaze(0, 0, maze, used);
 
         return maze;
     }
@@ -182,10 +164,10 @@ public class LevelManager : MonoBehaviour
         return ret;
     }
 
-    private void buildMaze(int row, int col, int[,] maze, int[,] freeCells, bool[,] used)
+    private void buildMaze(int row, int col, int[,] maze, bool[,] used)
     {
-        int rows = freeCells.GetLength(0);
-        int cols = freeCells.GetLength(1);
+        int rows = maze.GetLength(0);
+        int cols = maze.GetLength(1);
 
         while (true)
         {
@@ -210,7 +192,7 @@ public class LevelManager : MonoBehaviour
             maze[neigh_row_2, neigh_col_2] |= 1 << opposite_direction;
 
             used[neigh_row_2, neigh_col_2] = true;
-            buildMaze(neigh_row_2, neigh_col_2, maze, freeCells, used);
+            buildMaze(neigh_row_2, neigh_col_2, maze, used);
         }
     }
 }
