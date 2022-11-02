@@ -63,7 +63,7 @@ public class LevelManager : MonoBehaviour
 
         // loadLevel(level_data);
 
-        var maze = generateMaze(6, 4);
+        var maze = generateMaze(4, 6);
         loadLevel(buildLevelFromMaze(maze)); 
     }
 
@@ -136,7 +136,7 @@ public class LevelManager : MonoBehaviour
         List<List<List<String>>> block_data = new List<List<List<String>>>();
 
         JObject jObject = JObject.Parse(json_block_data);
-        for (int i = 1; i < 16; i++)
+        for (int i = 0; i < 16; i++)
         {
             JToken jt = jObject[i.ToString()];
             block_data.Add(jt.ToObject<List<List<String>>>());
@@ -150,7 +150,7 @@ public class LevelManager : MonoBehaviour
                 int configurations = block_data.ElementAt(maze[maze_row, maze_col] - 1).Count;
                 int idx = random.Next(configurations);
 
-                var block = block_data.ElementAt(maze[maze_row, maze_col] - 1).ElementAt(idx);
+                var block = block_data.ElementAt(maze[maze_row, maze_col]).ElementAt(idx);
                 for (int row = 0; row < BLOCK_SIZE; row++)
                 {
                     for (int col = 0; col < BLOCK_SIZE; col++)
