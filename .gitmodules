@@ -1,0 +1,3 @@
+[submodule "Assets/Assets/GLTFUtility"]
+	path = Assets/Assets/GLTFUtility
+	url = https://github.com/Siccity/GLTFUtility.git
