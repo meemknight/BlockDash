@@ -20,6 +20,25 @@ public class LevelManager : MonoBehaviour
     static int[] drow = new int[] { -1, 0, 1, 0 };
     static int[] dcol = new int[] { 0, 1, 0, -1 };
     const int BLOCK_SIZE = 27;
+    int[,] mapsTo =
+    {
+        { 0, 0 },
+        { 1, 0 },
+        { 1, 1 },
+        { 3, 0 },
+        { 1, 2 },
+        { 5, 0 },
+        { 3, 1 },
+        { 7, 0 },
+        { 1, 3 },
+        { 3, 3 },
+        { 5, 1 },
+        { 7, 3 },
+        { 3, 2 },
+        { 7, 2 },
+        { 7, 1 },
+        { 15, 0 },
+    };
 
     [SerializeField]
     Transform playerPrefab;
@@ -80,7 +99,6 @@ public class LevelManager : MonoBehaviour
 
         rows = levelData.GetLength(0);
         cols = levelData.GetLength(1);
-        Debug.Log(rows + " " + cols);
 
         for (int row = 0; row < rows; row++)
         { 
@@ -147,17 +165,60 @@ public class LevelManager : MonoBehaviour
         {
             for (int maze_col = 0; maze_col < maze_width; maze_col++)
             {
-                int configurations = block_data.ElementAt(maze[maze_row, maze_col] - 1).Count;
+                int maps_to = mapsTo[maze[maze_row, maze_col], 0];
+                int rotation = mapsTo[maze[maze_row, maze_col], 1];
+
+                int configurations = block_data.ElementAt(maps_to).Count;
                 int idx = random.Next(configurations);
 
-                var block = block_data.ElementAt(maze[maze_row, maze_col]).ElementAt(idx);
+                var block = block_data.ElementAt(maps_to).ElementAt(idx);
+                char[,] char_block = getCharBlock(block);
+
+                for (int i = 0; i < rotation; i++)
+                {
+                    char_block = rotateBlock(char_block);
+                }
                 for (int row = 0; row < BLOCK_SIZE; row++)
                 {
                     for (int col = 0; col < BLOCK_SIZE; col++)
                     {
-                        ret[row + maze_row * BLOCK_SIZE, col + maze_col * BLOCK_SIZE] = block.ElementAt(row)[col];
+                        ret[row + maze_row * BLOCK_SIZE, col + maze_col * BLOCK_SIZE] = char_block[row, col];
                     }
                 }
+            }
+        }
+
+        return ret;
+    }
+
+    char[,] getCharBlock(List<String> block)
+    {
+        char[,] ret = new char[block.Count, block[0].Length];
+
+        int row = 0, col = 0;
+        foreach (String s in block)
+        {
+            col = 0;
+            foreach (char c in s)
+            {
+                ret[row, col] = c;
+                col += 1;
+            }
+            row += 1;
+        }
+
+        return ret;
+    }
+
+    char[,] rotateBlock(char[,] block)
+    {
+        char[,] ret = new char[block.GetLength(0), block.GetLength(1)];
+
+        for (int row = 0; row < block.GetLength(0); row++)
+        {
+            for (int col = 0; col < block.GetLength(1); col++)
+            {
+                ret[col, block.GetLength(1) - row - 1] = block[row, col]; 
             }
         }
 
