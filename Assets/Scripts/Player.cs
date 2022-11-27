@@ -16,6 +16,9 @@ public class Player : MonoBehaviour
     public int row { get; set; }
     public int col { get; set; }
 
+    int initialRow;
+    int initialCol;
+
     int targetRow { get; set; }
     int targetCol { get; set; }
     Vector3 targetPos;
@@ -24,11 +27,16 @@ public class Player : MonoBehaviour
     int movementFreedom = 0;
     float speed = 30.0f;
 
+    Vector3 initialPosition;
+
     public LevelManager levelManager { get; set; }
 
     // Start is called before the first frame update
     void Start()
     {
+        initialPosition = transform.position;
+        initialRow = row;
+        initialCol = col;
         updateMovementFreedom();
     }
 
@@ -124,4 +132,14 @@ public class Player : MonoBehaviour
             updateMovementFreedom();
         }
     }
-}
+
+    public void kill()
+    {
+        transform.position = initialPosition;
+        currentState = PlayerState.IDLE;
+        row = initialRow;
+        col = initialCol;
+        updateMovementFreedom();
+        // levelManager.restart();
+    }
+}   

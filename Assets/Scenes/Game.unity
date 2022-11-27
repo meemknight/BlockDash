@@ -283,5 +283,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 2646124320067504232, guid: 40c3ef8d84f1287438e8050ffb3c15d5, type: 3}
-  wallPrefab: {fileID: 6064215719705481373, guid: 70bfdd7a86bf21a4a9839d0f89c43b83, type: 3}
-  floorPrefab: {fileID: 533876901171147274, guid: 93538ab5a230ea742bb8257378c05254, type: 3}
+  wallPrefab: {fileID: 675492512926413391, guid: 3705e5b174a920f4992124cc48212f91, type: 3}
+  floorPrefab: {fileID: 4811830357903638630, guid: d4b94c30b78df4f458c02ce99bd4fa73, type: 3}
+  spikePrefab: {fileID: 3976249755874330481, guid: c148c0c1d60fd76439c1bec4c03d5051, type: 3}
