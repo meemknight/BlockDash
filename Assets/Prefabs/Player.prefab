@@ -175,6 +175,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sussy Imposter
       objectReference: {fileID: 0}
+    - target: {fileID: 3619099142778357334, guid: 184c9223fd247504e99fb5acb6cefaa8, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 4820258118833199303, guid: 184c9223fd247504e99fb5acb6cefaa8, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -221,6 +225,25 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 9199261849990390558, guid: 184c9223fd247504e99fb5acb6cefaa8, type: 3}
+--- !u!1 &1369468610511564527 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3619099142778357334, guid: 184c9223fd247504e99fb5acb6cefaa8, type: 3}
+  m_PrefabInstance: {fileID: 2393886457848621241}
+  m_PrefabAsset: {fileID: 0}
+--- !u!136 &4287683265387061164
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1369468610511564527}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.2
+  m_Height: 0.7
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.35, z: 0}
 --- !u!4 &7195683705561657470 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4820258118833199303, guid: 184c9223fd247504e99fb5acb6cefaa8, type: 3}

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 using System.IO;
 using System.Linq;
@@ -12,7 +13,8 @@ public enum CellType
 {
     EMPTY,
     PLAYER,
-    WALL
+    WALL,
+    SPIKE
 }
 
 public class LevelManager : MonoBehaviour
@@ -46,19 +48,23 @@ public class LevelManager : MonoBehaviour
     Transform wallPrefab;
     [SerializeField]
     Transform floorPrefab;
+    [SerializeField]
+    Transform spikePrefab;
 
     public Dictionary<char, CellType> charToCellTypeMap = new Dictionary<char, CellType>()
     {
         { '.', CellType.EMPTY },
         { '#', CellType.WALL },
-        { '$', CellType.PLAYER }
+        { '$', CellType.PLAYER },
+        { '!', CellType.SPIKE },
     };
 
     public Dictionary<CellType, char> cellTypeToCharMap = new Dictionary<CellType, char>()
     {
         { CellType.EMPTY, '.' },
         { CellType.WALL, '#' },
-        { CellType.PLAYER, '$' }
+        { CellType.PLAYER, '$' },
+        { CellType.SPIKE, '!' },
     };
 
     public int rows { get; set; }
@@ -84,6 +90,11 @@ public class LevelManager : MonoBehaviour
 
         var maze = generateMaze(4, 6);
         loadLevel(buildLevelFromMaze(maze)); 
+    }
+
+    public void restart()
+    {
+        SceneManager.LoadScene("Game");
     }
 
     // Update is called once per frame
@@ -120,6 +131,9 @@ public class LevelManager : MonoBehaviour
                         player.row = row;
                         player.col = col;
                         break;
+                    case CellType.SPIKE:
+                        obj = Instantiate(spikePrefab);
+                        break;
                     default:
                         break;
                 }
@@ -131,6 +145,7 @@ public class LevelManager : MonoBehaviour
         }
         Transform floor = Instantiate(floorPrefab);
         floor.localScale = new Vector3(cols, .1f, rows);
+        floor.transform.position = new Vector3(0, -0.01f, 0);
     }
 
     int[,] generateMaze(int height, int width)
