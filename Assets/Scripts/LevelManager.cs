@@ -14,7 +14,8 @@ public enum CellType
     EMPTY,
     PLAYER,
     WALL,
-    SPIKE
+    SPIKE,
+    DIRECTION_CHANGER
 }
 
 public class LevelManager : MonoBehaviour
@@ -50,6 +51,8 @@ public class LevelManager : MonoBehaviour
     Transform floorPrefab;
     [SerializeField]
     Transform spikePrefab;
+    [SerializeField]
+    Transform directionChangerPrefab;
 
     public Dictionary<char, CellType> charToCellTypeMap = new Dictionary<char, CellType>()
     {
@@ -57,6 +60,7 @@ public class LevelManager : MonoBehaviour
         { '#', CellType.WALL },
         { '$', CellType.PLAYER },
         { '!', CellType.SPIKE },
+        { '+', CellType.DIRECTION_CHANGER },
     };
 
     public Dictionary<CellType, char> cellTypeToCharMap = new Dictionary<CellType, char>()
@@ -65,6 +69,7 @@ public class LevelManager : MonoBehaviour
         { CellType.WALL, '#' },
         { CellType.PLAYER, '$' },
         { CellType.SPIKE, '!' },
+        { CellType.DIRECTION_CHANGER, '+' },
     };
 
     public int rows { get; set; }
@@ -133,6 +138,9 @@ public class LevelManager : MonoBehaviour
                         break;
                     case CellType.SPIKE:
                         obj = Instantiate(spikePrefab);
+                        break;
+                    case CellType.DIRECTION_CHANGER:
+                        obj = Instantiate(directionChangerPrefab);
                         break;
                     default:
                         break;

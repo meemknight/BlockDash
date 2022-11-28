@@ -286,3 +286,4 @@ MonoBehaviour:
   wallPrefab: {fileID: 675492512926413391, guid: 3705e5b174a920f4992124cc48212f91, type: 3}
   floorPrefab: {fileID: 4811830357903638630, guid: d4b94c30b78df4f458c02ce99bd4fa73, type: 3}
   spikePrefab: {fileID: 3976249755874330481, guid: c148c0c1d60fd76439c1bec4c03d5051, type: 3}
+  directionChangerPrefab: {fileID: 941385722782390212, guid: 7148429234c2b1a489eae847bd714e62, type: 3}
