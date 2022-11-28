@@ -153,7 +153,7 @@ public class LevelManager : MonoBehaviour
         }
         Transform floor = Instantiate(floorPrefab);
         floor.localScale = new Vector3(cols, .1f, rows);
-        floor.transform.position = new Vector3(0, -0.01f, 0);
+        floor.transform.position = new Vector3(0, -0.05f, 0);
     }
 
     int[,] generateMaze(int height, int width)

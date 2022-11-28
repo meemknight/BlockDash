@@ -74,8 +74,6 @@ public class Spike : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.gameObject.name);
-
         if (other.gameObject.tag == "Player")
         {
             other.gameObject.transform.parent.GetComponent<Player>().kill();
