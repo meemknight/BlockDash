@@ -19,11 +19,12 @@ public class Player : MonoBehaviour
     int initialRow;
     int initialCol;
 
+    int currentDir = 0;
     int targetRow { get; set; }
     int targetCol { get; set; }
     Vector3 targetPos;
 
-    PlayerState currentState = PlayerState.IDLE;
+    public PlayerState currentState = PlayerState.IDLE;
     int movementFreedom = 0;
     float speed = 30.0f;
 
@@ -94,24 +95,32 @@ public class Player : MonoBehaviour
     {
         if ((movementFreedom & (1 << dir)) == 0) return;
 
+        currentDir = dir;
         int current_row = row, current_col = col;
-        bool should_stop = false;
-        while (!should_stop)
+        // see how far we can go in that direction
+        while (true)
         {
+            // only go one cell, so the player "pauses" on each cell
             current_row += drow[dir];
             current_col += dcol[dir];
+            break;
 
             if (levelManager.levelData[current_row, current_col] == levelManager.cellTypeToCharMap[CellType.WALL])
             {
                 current_row -= drow[dir];
                 current_col -= dcol[dir];
-                should_stop = true;
+                break;
             }
         }
 
         currentState = PlayerState.MOVING;
-        targetRow = current_row;
-        targetCol = current_col;
+        setTarget(current_row, current_col);
+    }
+
+    void setTarget(int r, int c)
+    {
+        targetRow = r;
+        targetCol = c;
 
         targetPos.x = targetCol - levelManager.cols / 2.0f + .5f;
         targetPos.z = -targetRow + levelManager.rows / 2.0f - .5f;
@@ -126,10 +135,29 @@ public class Player : MonoBehaviour
         }
         else
         {
-            currentState = PlayerState.IDLE;
+            // check if we should keep going
             row = targetRow;
             col = targetCol;
             updateMovementFreedom();
+
+            // check if on movement enhancer
+            char current_cell_symbol = levelManager.levelData[row, col];
+            if (MovementEnhancer.enhancers.ContainsKey(current_cell_symbol))
+            {
+                // apply effect
+                MovementEnhancer.enhancers[current_cell_symbol].ApplyEffect(this);
+                return;
+            }
+
+            // keep going in current direction
+            if ((movementFreedom & (1 << currentDir)) != 0)
+            {
+                setTarget(row + drow[currentDir], col + dcol[currentDir]);
+            } 
+            else
+            {
+                currentState = PlayerState.IDLE;
+            }
         }
     }
 
