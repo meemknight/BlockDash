@@ -76,7 +76,7 @@ public class Spike : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            other.gameObject.transform.parent.GetComponent<Player>().kill();
+            other.gameObject.transform.parent.GetComponent<Player>().hurt(1);
         }
     }
 }
