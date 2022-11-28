@@ -32,6 +32,10 @@ public class Player : MonoBehaviour
 
     public LevelManager levelManager { get; set; }
 
+    [SerializeField]
+    LifeUI lifeUI;
+    const int LIVES = 5;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -39,6 +43,8 @@ public class Player : MonoBehaviour
         initialRow = row;
         initialCol = col;
         updateMovementFreedom();
+
+        lifeUI.Lives = LIVES;
     }
 
     // Update is called once per frame
@@ -161,10 +167,16 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void hurt(int damage)
+    {
+        lifeUI.Lives -= damage;
+    }
+
     public void kill()
     {
         transform.position = initialPosition;
         currentState = PlayerState.IDLE;
+        lifeUI.Lives = LIVES;
         row = initialRow;
         col = initialCol;
         updateMovementFreedom();
