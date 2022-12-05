@@ -22,7 +22,7 @@ public class LevelManager : MonoBehaviour
 {
     static int[] drow = new int[] { -1, 0, 1, 0 };
     static int[] dcol = new int[] { 0, 1, 0, -1 };
-    const int BLOCK_SIZE = 27;
+    const int BLOCK_SIZE = 15;
     int[,] mapsTo =
     {
         { 0, 0 },
