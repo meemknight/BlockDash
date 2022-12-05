@@ -7,5 +7,6 @@ public class DirectionChanger : MovementEnhancer
     public override void ApplyEffect(Player player)
     {
         player.currentState = PlayerState.IDLE;
+        player.freezeInput(.1f);
     }
 }

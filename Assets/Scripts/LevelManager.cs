@@ -53,6 +53,10 @@ public class LevelManager : MonoBehaviour
     Transform spikePrefab;
     [SerializeField]
     Transform directionChangerPrefab;
+    [SerializeField]
+    int ROWS = 4;
+    [SerializeField]
+    int COLS = 4;
 
     public Dictionary<char, CellType> charToCellTypeMap = new Dictionary<char, CellType>()
     {
@@ -93,7 +97,7 @@ public class LevelManager : MonoBehaviour
 
         // loadLevel(level_data);
 
-        var maze = generateMaze(4, 6);
+        var maze = generateMaze(ROWS, COLS);
         loadLevel(buildLevelFromMaze(maze)); 
     }
 

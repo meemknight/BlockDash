@@ -36,6 +36,8 @@ public class Player : MonoBehaviour
     LifeUI lifeUI;
     const int LIVES = 5;
 
+    float inputFreezeTime = 0.0f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -50,6 +52,9 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        inputFreezeTime -= Time.deltaTime;
+        inputFreezeTime = Mathf.Max(0, inputFreezeTime);
+
         switch (currentState)
         {
             case PlayerState.IDLE:
@@ -79,6 +84,8 @@ public class Player : MonoBehaviour
 
     void updateIdleState()
     {
+        if (inputFreezeTime > 0.0f) return;
+
         if (Input.GetKey(KeyCode.W))
         {
             changeDirection(0);
@@ -181,5 +188,10 @@ public class Player : MonoBehaviour
         col = initialCol;
         updateMovementFreedom();
         // levelManager.restart();
+    }
+
+    public void freezeInput(float _freeze_time)
+    {
+        inputFreezeTime = _freeze_time;
     }
 }   
