@@ -24,7 +24,28 @@ public class Player : MonoBehaviour
     int targetCol { get; set; }
     Vector3 targetPos;
 
-    public PlayerState currentState = PlayerState.IDLE;
+    private PlayerState currentState;
+    public PlayerState CurrentState
+    {
+        get => currentState;
+        set
+        {
+            currentState = value;
+
+            switch (value)
+            {
+                case PlayerState.IDLE:
+                    stillBar.fadeIn();
+                    stillBar.startFilling();
+                    break;
+                case PlayerState.MOVING:
+                    stillBar.fadeOut();
+                    stillBar.stopFilling();
+                    break;
+            }
+        }
+    }
+
     int movementFreedom = 0;
     float speed = 30.0f;
 
@@ -34,6 +55,8 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     LifeUI lifeUI;
+    [SerializeField]
+    ProgressBar stillBar;
     const int LIVES = 5;
 
     float inputFreezeTime = 0.0f;
@@ -47,6 +70,7 @@ public class Player : MonoBehaviour
         updateMovementFreedom();
 
         lifeUI.Lives = LIVES;
+        CurrentState = PlayerState.IDLE;
     }
 
     // Update is called once per frame
@@ -55,7 +79,7 @@ public class Player : MonoBehaviour
         inputFreezeTime -= Time.deltaTime;
         inputFreezeTime = Mathf.Max(0, inputFreezeTime);
 
-        switch (currentState)
+        switch (CurrentState)
         {
             case PlayerState.IDLE:
                 updateIdleState();
@@ -65,6 +89,11 @@ public class Player : MonoBehaviour
                 break;
             default:
                 break;
+        }
+
+        if (stillBar.isFilled())
+        {
+            kill();
         }
     }
 
@@ -111,22 +140,12 @@ public class Player : MonoBehaviour
         currentDir = dir;
         int current_row = row, current_col = col;
         // see how far we can go in that direction
-        while (true)
-        {
-            // only go one cell, so the player "pauses" on each cell
-            current_row += drow[dir];
-            current_col += dcol[dir];
-            break;
 
-            if (levelManager.levelData[current_row, current_col] == levelManager.cellTypeToCharMap[CellType.WALL])
-            {
-                current_row -= drow[dir];
-                current_col -= dcol[dir];
-                break;
-            }
-        }
+        // only go one cell, so the player "pauses" on each cell
+        current_row += drow[dir];
+        current_col += dcol[dir];
 
-        currentState = PlayerState.MOVING;
+        CurrentState = PlayerState.MOVING;
         setTarget(current_row, current_col);
     }
 
@@ -169,7 +188,7 @@ public class Player : MonoBehaviour
             } 
             else
             {
-                currentState = PlayerState.IDLE;
+                CurrentState = PlayerState.IDLE;
             }
         }
     }
@@ -181,8 +200,9 @@ public class Player : MonoBehaviour
 
     public void kill()
     {
+        stillBar.reset();
         transform.position = initialPosition;
-        currentState = PlayerState.IDLE;
+        CurrentState = PlayerState.IDLE;
         lifeUI.Lives = LIVES;
         row = initialRow;
         col = initialCol;
