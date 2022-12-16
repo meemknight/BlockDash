@@ -7,7 +7,7 @@ public enum SpikeState
     HIDDEN,
     ACTIVE,
     TRANS_HIDDEN,
-    TRANS_ACTIVE
+    TRANS_ACTIVE,
 }
 
 public class Spike : MonoBehaviour

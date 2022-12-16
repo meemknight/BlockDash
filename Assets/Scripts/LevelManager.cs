@@ -15,11 +15,22 @@ public enum CellType
     PLAYER,
     WALL,
     SPIKE,
-    DIRECTION_CHANGER
+    DIRECTION_CHANGER,
+    COIN
 }
 
 public class LevelManager : MonoBehaviour
 {
+    [SerializeField]
+    public Canvas pauseMenu;
+    [SerializeField]
+    public Canvas wonMenu;
+    [SerializeField]
+    private PauseComponent pauseComponent;
+
+    public static GameMode gameMode = GameMode.EASY;
+    public static int coins = 0;
+
     static int[] drow = new int[] { -1, 0, 1, 0 };
     static int[] dcol = new int[] { 0, 1, 0, -1 };
     const int BLOCK_SIZE = 15;
@@ -54,9 +65,13 @@ public class LevelManager : MonoBehaviour
     [SerializeField]
     Transform directionChangerPrefab;
     [SerializeField]
-    int ROWS = 4;
+    Transform coinPrefab;
     [SerializeField]
-    int COLS = 4;
+    int ROWS = 2;
+    [SerializeField]
+    int COLS = 2;
+
+    Player player;
 
     public Dictionary<char, CellType> charToCellTypeMap = new Dictionary<char, CellType>()
     {
@@ -65,6 +80,7 @@ public class LevelManager : MonoBehaviour
         { '$', CellType.PLAYER },
         { '!', CellType.SPIKE },
         { '+', CellType.DIRECTION_CHANGER },
+        { '*', CellType.COIN },
     };
 
     public Dictionary<CellType, char> cellTypeToCharMap = new Dictionary<CellType, char>()
@@ -74,31 +90,99 @@ public class LevelManager : MonoBehaviour
         { CellType.PLAYER, '$' },
         { CellType.SPIKE, '!' },
         { CellType.DIRECTION_CHANGER, '+' },
+        { CellType.COIN, '*' },
     };
 
     public int rows { get; set; }
     public int cols { get; set; }
     public char[,] levelData { get; set; }
 
+    private bool isPaused = false;
+    public bool IsPaused
+    {
+        get => isPaused;
+        set
+        {
+            isPaused = value;
+            Time.timeScale = (isPaused) ? 0 : 1;
+            if (!gameEnded)
+            {
+                pauseMenu.enabled = isPaused;
+            }
+        }
+    }
+    private bool gameEnded = false;
+
+    public void loadWonMenu()
+    {
+        Destroy(pauseComponent);
+        gameEnded = true;
+        IsPaused = true;
+        wonMenu.GetComponentInChildren<GameWonUI>().updateData();
+        wonMenu.enabled = true;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        char[,] level_data = new char[9, 9]{
-            { '#', '#', '#', '#', '#', '#', '#', '#', '#'},
-            { '#', '#', '#', '#', '#', '#', '#', '#', '#'},
-            { '#', '#', '#', '#', '#', '#', '#', '#', '#'},
-            { '#', '#', '#', '#', '#', '#', '#', '#', '#'},
-            { '#', '#', '#', '#', '#', '#', '#', '#', '#'},
-            { '#', '#', '#', '#', '#', '#', '#', '#', '#'},
-            { '#', '#', '#', '#', '#', '#', '#', '#', '#'},
-            { '#', '#', '#', '#', '#', '#', '#', '#', '#'},
-            { '#', '#', '#', '#', '#', '#', '#', '#', '#'}
-        };
+        Time.timeScale = 1;
 
-        // loadLevel(level_data);
+        pauseMenu.enabled = false;
+        wonMenu.enabled = false;
+
+        player = Instantiate(playerPrefab).GetComponent<Player>();
+        player.levelManager = this;
+
+        switch (gameMode)
+        {
+            case GameMode.EASY:
+                ROWS = 2;
+                COLS = 2;
+                break;
+            case GameMode.MEDIUM:
+                ROWS = 3;
+                COLS = 4;
+                break;
+            case GameMode.HARD:
+                ROWS = 5;
+                COLS = 5;
+                break;
+        }
 
         var maze = generateMaze(ROWS, COLS);
         loadLevel(buildLevelFromMaze(maze)); 
+    }
+
+    public static void levelFinished(float time)
+    {
+        string key = "";
+        switch (gameMode)
+        {
+            case GameMode.EASY:
+                key = "easy";
+                break;
+            case GameMode.MEDIUM:
+                key = "medium";
+                break;
+            case GameMode.HARD:
+                key = "hard";
+                break;
+        }
+
+        float current_time = 999999.0f;
+        if (PlayerPrefs.HasKey(key))
+        {
+            current_time = PlayerPrefs.GetFloat(key);
+            if (time < current_time)
+            {
+                PlayerPrefs.SetFloat(key, time);
+            }
+        }
+        else
+        {
+            PlayerPrefs.SetFloat(key, time);
+        }
+        PlayerPrefs.Save();
     }
 
     public void restart()
@@ -115,10 +199,12 @@ public class LevelManager : MonoBehaviour
     void loadLevel(char[,] level_data)
     {
         levelData = level_data;
-        level_data[1, 1] = '$';
+        levelData[1, 1] = '$';
 
         rows = levelData.GetLength(0);
         cols = levelData.GetLength(1);
+
+        int total_coins = 0;
 
         for (int row = 0; row < rows; row++)
         { 
@@ -134,9 +220,7 @@ public class LevelManager : MonoBehaviour
                         obj = Instantiate(wallPrefab);
                         break;
                     case CellType.PLAYER:
-                        obj = Instantiate(playerPrefab);
-                        Player player = obj.GetComponent<Player>();
-                        player.levelManager = this;
+                        obj = player.transform;
                         player.row = row;
                         player.col = col;
                         break;
@@ -145,6 +229,10 @@ public class LevelManager : MonoBehaviour
                         break;
                     case CellType.DIRECTION_CHANGER:
                         obj = Instantiate(directionChangerPrefab);
+                        break;
+                    case CellType.COIN:
+                        total_coins += 1;
+                        obj = Instantiate(coinPrefab);
                         break;
                     default:
                         break;
@@ -158,6 +246,9 @@ public class LevelManager : MonoBehaviour
         Transform floor = Instantiate(floorPrefab);
         floor.localScale = new Vector3(cols, .1f, rows);
         floor.transform.position = new Vector3(0, -0.05f, 0);
+
+        //player.coinUI.NeededCoins = total_coins;
+        coins = total_coins;
     }
 
     int[,] generateMaze(int height, int width)
