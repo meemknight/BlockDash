@@ -56,6 +56,8 @@ public class Player : MonoBehaviour
     [SerializeField]
     LifeUI lifeUI;
     [SerializeField]
+    public CoinUI coinUI;
+    [SerializeField]
     ProgressBar stillBar;
     const int LIVES = 5;
 
@@ -200,16 +202,21 @@ public class Player : MonoBehaviour
 
     public void kill()
     {
-        stillBar.reset();
-        transform.position = initialPosition;
-        CurrentState = PlayerState.IDLE;
-        lifeUI.Lives = LIVES;
-        row = initialRow;
-        col = initialCol;
-        updateMovementFreedom();
-        // levelManager.restart();
+        //stillBar.reset();
+        //freezeInput(.1f);
+        //transform.position = initialPosition;
+        //CurrentState = PlayerState.IDLE;
+        //lifeUI.Lives = LIVES;
+        //row = initialRow;
+        //col = initialCol;
+        //updateMovementFreedom();
+         levelManager.restart();
     }
 
+    public void pickCoin()
+    {
+        coinUI.collectCoin();
+    }
     public void freezeInput(float _freeze_time)
     {
         inputFreezeTime = _freeze_time;
