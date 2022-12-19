@@ -1,5 +1,7 @@
 # BlockDash
 
+Deplasarea in joc se face cu ajutorul tastelor W,A,S,D
+
 ## Clone Repo
 git clone https://github.com/meemknight/BlockDash.git --recurse-submodules
 
