@@ -956,6 +956,7 @@ MonoBehaviour:
   wallPrefab: {fileID: 675492512926413391, guid: 3705e5b174a920f4992124cc48212f91, type: 3}
   floorPrefab: {fileID: 4811830357903638630, guid: d4b94c30b78df4f458c02ce99bd4fa73, type: 3}
   spikePrefab: {fileID: 3976249755874330481, guid: c148c0c1d60fd76439c1bec4c03d5051, type: 3}
+  bloaterPrefab: {fileID: 4233675101108775186, guid: be822e3b414a3b04299ac05685144c7b, type: 3}
   directionChangerPrefab: {fileID: 941385722782390212, guid: 7148429234c2b1a489eae847bd714e62, type: 3}
   coinPrefab: {fileID: 1682626936224800577, guid: df0a78ce9787e8845837950862ba4472, type: 3}
   ROWS: 5
@@ -1090,7 +1091,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 1b69bd80f1df6f44598034d785aa55f8, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.479
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
