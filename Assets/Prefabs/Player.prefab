@@ -851,7 +851,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2741478426942631597, guid: c080d4a18ea26c74fb340e73655200d8, type: 3}
       propertyPath: fillDuration
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2741478426942631597, guid: c080d4a18ea26c74fb340e73655200d8, type: 3}
       propertyPath: sliderColor.a
